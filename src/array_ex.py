@@ -59,8 +59,6 @@ def move_zeros(array):
 
     return new_arr
 
-print(move_zeros([0,1,0,3,12]))
-
 #find the missing numbebr in an array:
 
 def missing_number(array):
@@ -88,7 +86,91 @@ def missing_num_hash(array):
     
     return missing_num
 
+#find max and min element in an array:
 
+#method 1
+def max_min(array):
+    max_num = max(array)
+    min_num = min(array)
+    return max_num,min_num
+
+#method 2:
+def max_min_logic(array):
+    max=array[0]
+    min=array[0]
+    for num in array:
+        if num>max:
+            max=num
+        if num<min:
+            min=num
+
+    return max,min
+
+#count the number of even and odd elements:
+
+def coint_even_odd(array):
+    even,odd=0,0
+    for num in array:
+        if num%2==0:
+            even=even+1
+        else:
+            odd=odd+1
+    return even,odd
+
+#frequency of each element in an araray:
+
+def frequency(array):
+
+    for num in set(array):
+        count=0
+        for i in range(len(array)):
+            if num==array[i]:
+                count+=1
+        print(f"Total number of element {num} in array is {count}")
+
+#remove duplicates from an array:
+def remove_duplicates(array):
+    return list(set(array))
+
+#check if two arrays are equal: same elements and frequency
+def tw_equal_array(array1,array2):
+    found=[]
+    if len(array1)!=len(array2):
+        return "Arrays are not equal"
+    
+    elif len(array1)==len(array2):
+        for num in array1:
+            for nums in array2:
+                if num==nums:
+                    found.append(True)
+        if len(found)==len(array1):
+            return "Arrays are equal"
+        else:
+            return "Arrays are not equal"
+    
+#method 2:
+def two_equal_array_hash(array1,array2):
+    if len(array1)!=len(array2):
+        return "Arrays are not equal"
+    hash_set1= set(array1)
+    hash_set2= set(array2)
+    if hash_set1==hash_set2:
+        return "Arrays are equal"
+    else:
+        return "Arrays are not equal"
+
+#method 3:
+def twoo_equal_array_sort(array1,array2):
+    if len(array1)!=len(array2):
+        return "Arrays are not equal"
+    
+    return "Arrays are equal" if sorted(array1)==sorted(array2) else "Arrays are not equal" 
+
+#Find the second largest element in an array:
+
+
+            
+        
 
 
     
