@@ -68,6 +68,37 @@ def running_sum(nums):
         run_sum.append(sum)
     return run_sum
 
+#Q:2011: Find the calue of variable afterr perfprming operatioms:
+
+def final_value_after_operations(operations):
+    x=0
+    for operation in operations:
+        if "++" in operation:
+            x=x+1
+        elif "--" in operation:
+            x=x-1
+    return x
+
+#method 2
+def final_value_after_operations2(operations):
+    return (operations.count("++X")+operations.count("X++")) - (operations.count("--X")+operations.count("X--"))
+
+#Q:1365: How many numbers are smaller than the current number
+#method 1
+
+def smaller_numbers_than_current(nums):
+    ans=[]
+    for num in nums:
+        count=0
+        for i in range(len(nums)):
+            if num>nums[i]:
+                count+=1
+                
+        ans.append(count)
+    return ans
+
+print(smaller_numbers_than_current([8,1,2,2,3]))
+
 
 
 

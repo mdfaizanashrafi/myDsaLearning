@@ -246,7 +246,21 @@ def merge_arrays(arr1,arr2):
 
 #Move all zeros to the end of the array
 
+def move_all_zeros_at_the_end(nums):
+    zero_count=0
+    ans=[]
+    for num in nums:
+        if num!=0:
+            ans.append(num)
+        elif num==0:
+            zero_count+=1
+    ans.extend([0]*zero_count)
+    return ans
 
+#Find the Missing Number from 0 to n:
+
+def missing_num(nums):
+    
 
 
         
