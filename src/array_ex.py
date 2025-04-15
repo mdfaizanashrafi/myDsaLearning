@@ -260,6 +260,14 @@ def move_all_zeros_at_the_end(nums):
 #Find the Missing Number from 0 to n:
 
 def missing_num(nums):
+    n= len(nums)
+    total_sum=n*(n+1)//2
+    actual_sum= sum(nums)
+    return (total_sum-actual_sum)
+
+#longest subarray with sum k:
+
+def longest_subarray_with_sum_k(nums,k):
     
 
 

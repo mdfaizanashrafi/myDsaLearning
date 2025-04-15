@@ -1,0 +1,1 @@
+elf._hash(key)

@@ -97,7 +97,34 @@ def smaller_numbers_than_current(nums):
         ans.append(count)
     return ans
 
-print(smaller_numbers_than_current([8,1,2,2,3]))
+#1389: Create target array in the given order
+
+def target_array(nums,index):
+    ans=[]
+    for num,idx in zip(nums,index):
+        ans.insert(idx,num)
+    return ans
+
+def max_num_word_in_str(sentences):
+    max_len=0
+    for sentence in sentences:
+        words=sentence.split(" ")
+        max_len=max(len(words),max_len)
+        
+    return max_len
+
+#Q1 : Two Sum question:
+
+def two_sum(nums,target):
+    seen={}
+    for idx,num in enumerate(nums):
+        complement=target - num #comp + num = target
+        if complement in seen:
+            return [seen[complement],idx]
+        seen[num]=idx
+
+#Q242: Valid Anagram:
+
 
 
 
