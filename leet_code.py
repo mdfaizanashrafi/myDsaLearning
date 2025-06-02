@@ -198,12 +198,74 @@ class Solution:
     
 #==========================================
 
-#Leetcode 236: Produce of Array Except Self
+#Leetcode 238: Produce of Array Except Self
 
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        n= len(nums)
+        answer=[1]*n
 
+        #calculate the left product
+        left_product=1
+        for i in range(n):
+            answer[i]=left_product
+            left_product *= nums[i]
 
+        #multiply with right product
+        right_product=1
+        for i in range(n-1,-1,-1):
+            answer[i] *= right_product
+            right_product *= nums[i]
 
+        return answer
 
+#=====================================
+
+#is Valid Sudoku: Leetcode: 36
+
+def isValidSudoku(board):
+
+    #there are 9 row and colmns, and 9(3x3) boxes
+    rows= [set() for _ in range(9)]
+    cols=[set() for _ in range(9)]
+    boxes= [set() for _ in range(9)]
+
+    for r in range(9):
+        for c in range(9):
+            num=board[r][c]
+            if num == '.':
+                continue
+            if num in rows[r]:
+                return False
+            if num in cols[c]:
+                return False
+            
+            box_index= (r//3)*3 + (c//3)
+            if num in boxes[box_index]:
+                return False
+            rows[r].add(num)
+            cols[c].add(num)
+            boxes[box_index].add(num)
+    return True
+
+#====================================================
+# Longest consecutive sequence of number #leetcode: 128
+
+def longestConsecutive(nums):
+    num_set= set(nums) 
+    longest= 0
+    for num in num_set:
+        if num-1 not in num_set:
+            current_num = num
+            current_length=1
+        
+            while current_num+1 in num_set:
+                current_num +=1
+                current_length +=1
+
+            longest= max(longest, current_length)
+        
+    return longest
 
 
 
