@@ -265,10 +265,10 @@ def missing_num(nums):
     actual_sum= sum(nums)
     return (total_sum-actual_sum)
 
-#longest subarray with sum k:
+#=====================================
 
-def longest_subarray_with_sum_k(nums,k):
-    
+
+
 
 
         

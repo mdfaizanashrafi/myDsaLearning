@@ -124,6 +124,81 @@ def two_sum(nums,target):
         seen[num]=idx
 
 #Q242: Valid Anagram:
+from collections import defaultdict
+def anagram(strs):
+    groups = defaultdict(list)
+    for str in strs:
+        freq=[0]*26
+        for ch in str:
+            freq[ord(ch)]-freq[ord('a')]
+        
+        key= tuple(freq)
+        groups[key].append(str)
+    return list(groups.values())
+
+#=================================================
+#Top K Elements: #leetcode 347
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+
+    #Step1: count freq using defaultdict    
+        freq = defaultdict(int)
+        for num in nums:
+            freq[num] += 1
+
+    # Step 2: Create bucket
+        if not freq:
+            return []
+    
+        max_freq = max(freq.values())
+        bucket = [[] for _ in range(max_freq + 1)]
+
+        for num, count in freq.items():
+            bucket[count].append(num)
+
+    # Step 3: Collect top k elements
+        result = []
+        for i in range(len(bucket) - 1, 0, -1):
+            for num in bucket[i]:
+                result.append(num)
+                if len(result) == k:
+                    return result
+
+        return result
+    
+#================================================================
+#Encode and Decode: #Leetcode: 271
+
+class Solution:
+
+    def encode(self, strs: List[str]) -> str:
+        #encode a list of string to a single string with # and length number
+        encoded=''
+        for s in strs:
+            encoded +=f"{len(s)}#{s}"
+        return encoded
+
+    def decode(self, s: str) -> List[str]:
+        #decode the encoded string using the # and len
+        decoded=[]
+        i=0
+        while i<len(s):
+            #find the positions of #
+            j= s.find('#',i)
+            if j==-1:
+                break
+            
+            #get the length of the string
+            length= int(s[i:j])
+
+            decoded.append(s[j+1:j+1+length])
+            i=j+1+length
+        return decoded
+    
+#==========================================
+
+#Leetcode 236: Produce of Array Except Self
 
 
 
