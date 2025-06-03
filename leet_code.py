@@ -267,5 +267,69 @@ def longestConsecutive(nums):
         
     return longest
 
+#==================================================
+#evaluate polish notation #leetcode 150
 
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack=[]
+        for token in tokens:
+            if token in {'+','-','*','/'}:
+                b= stack.pop()
+                a=stack.pop()
+                if token=='+':
+                    result=a+b
+                elif token=='-':
+                    result=a-b
+                elif token=='*':
+                    result=a*b
+                elif token=='/':
+                    result=int(a/b)
+                stack.append(result)
+            else:
+                stack.append(int(token))
+        return stack[0]
+        
+
+#======================================================
+#min stack #155
+
+class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+
+    def pop(self) -> None:
+        if self.stack.pop() == self.min_stack[-1]:
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.min_stack[-1]
+    
+#==================================================
+
+#Valid parentheisi: #20
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack=[]
+        bracket_map={')':'(','}':'{',']':'['}
+        for char in s:
+            if char in bracket_map.values():
+                stack.append(char)
+            elif char in bracket_map:
+                if not stack or stack[-1] != bracket_map[char]:
+                    return False
+                stack.pop()
+            else:
+                return False
+        return not stack
 
