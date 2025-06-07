@@ -690,3 +690,34 @@ class Solution:
         return -1
 
 #========================================================
+#time based Key-Value store: #leetcode: 981
+
+import bisect
+class TimeMap:
+
+    def __init__(self):
+        self.store = defaultdict(list)  
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        self.store[key].append((timestamp, value))
+
+    def get(self, key: str, timestamp: int) -> str:
+        if key not in self.store:
+            return ""
+        
+        entries= self.store[key]
+        i = bisect.bisect_right(entries, (timestamp, chr(255)))-1
+
+        if i>=0:
+            return entries[i][1]
+        else:
+            return ""
+
+
+# Your TimeMap object will be instantiated and called as such:
+# obj = TimeMap()
+# obj.set(key,value,timestamp)
+# param_2 = obj.get(key,timestamp)
+
+#========================================================
+#Median of two sorted arrays: #leetcode 4
