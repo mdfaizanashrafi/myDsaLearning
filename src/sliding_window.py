@@ -101,3 +101,82 @@ class Solution:
         return max_len
     
 #==============================================================
+
+#567. Permutation in String
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        len_s1 = len(s1)
+        len_s2 = len(s2)
+
+        if len_s1 > len_s2:
+            return False
+
+        from collections import Counter
+
+        s1_count = Counter(s1)
+        window_count = Counter()
+        for i in range(len_s1):
+            window_count[s2[i]] += 1
+
+        if window_count == s1_count:
+            return True
+
+        for i in range(len_s1, len_s2):
+            left_char = s2[i-len_s1]
+            right_char = s2[i]
+            window_count[left_char] -= 1
+            if window_count[left_char] == 0:
+                del window_count[left_char]
+
+            window_count[right_char] += 1
+
+            if window_count == s1_count:
+                return True
+        
+        return False
+    
+#==============================================================
+
+#76. Minimum Window Substring
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        from collections import defaultdict
+
+        if not s or not t or len(s) < len(t):
+            return ""
+        
+        t_count = defaultdict(int)
+        for char in t:
+            t_count[char] += 1
+
+        window_count = defaultdict(int)
+        required = len(t_count)
+        formed =0
+        left = 0
+        min_len =float('inf')
+        result = (0,0)
+
+        for right in range(len(s)):
+            char = s[right]
+            window_count[char] += 1
+
+            if char in t_count and window_count[char] == t_count[char]:
+                formed +=1
+
+            while formed == required:
+                if (right - left +1) < min_len:
+                    min_len = right-left+1
+                    result = (left, right)
+                    
+                window_count[s[left]] -= 1
+                if s[left] in t_count and window_count[s[left]] < t_count[s[left]]:
+                    formed -= 1
+
+                left +=1
+            
+        return s[result[0] : result[1]+1] if min_len != float('inf') else ""
+    
+#==============================================================================
+
