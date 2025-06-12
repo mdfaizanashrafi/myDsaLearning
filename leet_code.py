@@ -936,4 +936,37 @@ class Solution:
         return s[result[0] : result[1]+1] if min_len != float('inf') else ""
     
 #===============================================================================
+#206. Reverse Linked List
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        current = head
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        
+        return prev
+
+
+#===================================================
+
+#21: Merge Two Sorted Linked Lists
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        tail = dummy
+        while list1 and list2:
+            if list1.val <= list2.val:
+                tail.next = list1
+                list1 = list1.next
+            else:
+                tail.next = list2
+                list2 = list2.next
+            tail=tail.next
+        tail.next=list1 or list2
+        return dummy.next
 
