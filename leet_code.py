@@ -1180,3 +1180,67 @@ class LRUCache:
         self._add(new_node)
         self.cache[key] = new_node
 
+#=====================================================================
+
+#23. Merge k Sorted Lists
+
+from typing import List, Optional
+from heapq import heappush, heappop
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        heap = []
+        for i, l in enumerate(lists):
+            if l:
+                heappush(heap, (l.val, i, l))
+        
+        dummy = ListNode(0)
+        curr = dummy
+        while heap:
+            val, idx, node = heappop(heap)
+            curr.next = node
+            curr = curr.next
+
+            if node.next:
+                heappush(heap, (node.next.val, idx, node.next))
+            
+        return dummy.next
+    
+#===========================================================
+
+#25. Reverse Nodes in k-Group
+
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        dummy = ListNode(0)
+        dummy.next = head
+        group_prev = dummy
+
+        while True:
+            kth = self.getkth(group_prev, k)
+            if not kth:
+                break
+            group_next = kth.next
+            curr = group_prev.next
+            prev = group_next
+
+            for _ in range(k):
+                temp = curr.next
+                curr.next = prev
+                prev = curr
+                curr = temp
+
+            new_group_head = group_prev.next
+            group_prev.next = kth
+            group_prev = new_group_head
+        
+        return dummy.next
+
+    def getkth(self, curr: ListNode, k: int) -> ListNode:
+        while curr and k>0:
+            curr = curr.next
+            k -= 1
+        return curr
+    
+
+    
