@@ -6,10 +6,7 @@ An array is a data structure that stores a fixed-size sequential collection of e
 It allows you to store multiple values under a single variable name and access them using indexes (positions).
 
 Arrays are one of the most fundamental and widely used data structures in programming.
-
-Here’s a well-structured Google Docs-style content on **Arrays** — including an introduction, types, examples, and real-world use cases in programming. You can copy this content directly into a Google Doc.
-
----
+--
 
 # 📚 Arrays in Programming: Complete Guide
 
