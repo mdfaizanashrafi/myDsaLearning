@@ -150,5 +150,61 @@ class Solution:
 
 #104. Maximum Depth of Binary Tree
 
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
 
+        left_depth = self.maxDepth(root.left)
+        right_depth = self.maxDepth(root.right)
 
+        return 1+max(left_depth, right_depth)
+    
+#============================================================================
+
+#543. Diameter of Binary Tree
+
+class Solution:
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        self.diameter =0
+
+        def dfs(node):
+            if not node:
+                return 0
+
+            left = dfs(node.left)
+            right = dfs(node.right)
+
+            self.diameter = max(self.diameter, left+right)
+
+            return 1+max(left, right)
+        
+        dfs(root)
+        return self.diameter
+
+#================================================================
+
+#110: Balannced Binary tree
+
+class Solution:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        def dfs(node):
+            if not node:
+                return 0
+
+            left_height = dfs(node.left)
+            right_height = dfs(node.right)
+
+            if left_height == -1 or right_height == -1:
+                return -1
+
+            if abs(left_height - right_height) > 1:
+                return -1
+
+            return 1+max(left_height, right_height)
+
+        return dfs(root) != -1
+    
+  #============================================================
+
+  
