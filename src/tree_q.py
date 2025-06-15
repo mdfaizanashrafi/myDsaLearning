@@ -390,3 +390,102 @@ class Solution:
 
         return -1
     
+#===================================================================================
+
+#105. Construct Binary Tree from Preorder and Inorder Traversal
+
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        inorder_index_map = {val: idx for idx, val in enumerate(inorder)}
+        self.pre_idx = 0
+
+        def build(start, end):
+            if start > end:
+                return None
+            
+            root_val = preorder[self.pre_idx]
+            root = TreeNode(root_val)
+            self.pre_idx +=1
+            index = inorder_index_map[root_val]
+
+            root.left = build(start, index -1)
+            root.right = build(index +1, end)
+
+            return root
+
+        return build(0, len(inorder)-1)
+    
+#==========================================================================
+
+#124. Binary Tree Maximum Path Sum
+
+class Solution:
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        self.max_sum = float('-inf')
+
+        def dfs(node):
+            if not node:
+                return 0
+
+            left_gain = max(dfs(node.left), 0)
+            right_gain = max(dfs(node.right), 0)
+
+            current_max_path = node.val + left_gain + right_gain
+            self.max_sum = max(self.max_sum, current_max_path)
+
+            return node.val + max(left_gain, right_gain)
+
+        dfs(root)
+        return self.max_sum
+
+#========================================================================
+
+#297. Serialize and Deserialize Binary Tree
+
+class Codec:
+
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        def dfs(node):
+            if not node:
+                return ["null"]
+            return [str(node.val)]+dfs(node.left)+dfs(node.right)
+        return ",".join(dfs(root))
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        nodes = data.split(",")
+        self.i = 0
+
+        def build():
+            if nodes[self.i] == "null":
+                self.i += 1
+                return None
+
+            node = TreeNode(int(nodes[self.i]))
+            self.i += 1
+
+            node.left = build()
+            node.right = build()
+
+            return node
+
+        return build()
+        
+
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))
+
+#=======================================================================
+
+
