@@ -344,3 +344,49 @@ class Solution:
         return dfs(root, float('-inf'))
     
 #======================================================================
+
+#98. Validate Binary Search Tree
+
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        def dfs(node, low, high):
+            if not node:
+                return True
+
+            if node.val <= low or node.val >= high:
+                return False
+
+            return dfs(node.left, low, node.val) and dfs(node.right, node.val, high)
+
+        return dfs(root, float('-inf'), float('inf'))
+
+#============================================================================
+
+#230. Kth Smallest Element in a BST
+
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        curr = root
+        while curr:
+            if not curr.left:
+                k -= 1
+                if k == 0:
+                    return curr.val
+                curr = curr.right
+            else:
+                prev = curr.left
+                while prev.right and prev.right != curr:
+                    prev = prev.right
+            
+                if not prev.right:
+                    prev.right = curr
+                    curr = curr.left
+                else:
+                    prev.right = None
+                    k-=1
+                    if k==0:
+                        return curr.val
+                    curr = curr.right
+
+        return -1
+    
