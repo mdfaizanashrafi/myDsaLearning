@@ -1402,3 +1402,99 @@ class Solution:
         
         return dfs(root)
     
+#===========================================================================
+
+#235. Lowest Common Ancestor of a Binary Search Tree
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        while root:
+            if p.val < root.val and q.val < root.val:
+                root = root.left
+            
+            elif p.val > root.val and q.val > root.val:
+                root = root.right
+            
+            else:
+                return root
+            
+        return None
+    
+#==================================================================================
+
+#102. Binary Tree Level Order Traversal
+
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+        
+        result = []
+        queue = deque([root])
+
+        while queue:
+            level_size = len(queue)
+            current_level = []
+
+            for _ in range(level_size):
+                node= queue.popleft()
+                current_level.append(node.val)
+
+                if node.left:
+                    queue.append(node.left)
+                
+                if node.right:
+                    queue.append(node.right)
+                
+            result.append(current_level)
+        return result
+    
+#=================================================================
+
+#199. Binary Tree Right Side View
+
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        
+        result = []
+        queue = deque([root])
+
+        while queue:
+            level_size = len(queue)
+            for i in range(level_size):
+                node=queue.popleft()
+
+                if i == level_size-1:
+                    result.append(node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            
+        return result
+    
+#==========================================================================
+#1448. Count Good Nodes in Binary Tree
+
+class Solution:
+    def goodNodes(self, root: TreeNode) -> int:
+        def dfs(node, max_so_far):
+            if not node:
+                return 0
+
+            count = 0
+            if node.val >= max_so_far:
+                count += 1
+                max_so_far = node.val
+
+            count += dfs(node.left, max_so_far)
+            count += dfs(node.right, max_so_far)
+
+            return count
+    
+        return dfs(root, float('-inf'))
+    
+#======================================================================
+
