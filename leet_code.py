@@ -1374,3 +1374,31 @@ class Solution:
             return False
         
         return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+    
+#====================================================================================
+
+#572. Subtree of Another Tree
+
+class Solution:
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+        def isSame(p,q):
+            if not p and not q:
+                return True
+
+            if not p or not q:
+                return False
+
+            return p.val == q.val and isSame(p.left, q.left) and isSame(p.right, q.right)
+        
+        
+        def dfs(node):
+            if not node:
+                return False
+            
+            if isSame(node, subRoot):
+                return True
+
+            return dfs(node.left) or dfs(node.right)
+        
+        return dfs(root)
+    
