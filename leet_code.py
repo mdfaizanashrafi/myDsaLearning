@@ -1640,4 +1640,155 @@ class Codec:
 # ans = deser.deserialize(ser.serialize(root))
 
 #======================================================================
+#TRIE DATA STRUCTURE
+#======================================================================
 
+#208. Implement Trie (Prefix Tree)
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+class Trie:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        node= self.root
+        for char in word:
+            if char not in node.children:
+                return False
+
+            node = node.children[char]
+        return node.is_end_of_word
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+        for char in prefix:
+            if char not in node.children:
+                return False
+
+            node = node.children[char]
+        return True
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
+
+#=========================================================================
+
+#211. Design Add and Search Words Data Structure
+
+from typing import Dict
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.root = TrieNode()        
+
+    def addWord(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+
+            node = node.children[char]
+        
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        def dfs(node, index):
+            if index == len(word):
+                return node.is_end_of_word
+            current_char = word[index]
+
+            if current_char == ".":
+                for child in node.children.values():
+                    if dfs(child, index+1):
+                        return True
+                return False
+            else:
+                if current_char in node.children:
+                    return dfs(node.children[current_char], index+1)
+                else:
+                    return False
+        
+        return dfs(self.root, 0)
+    
+#=============================================================================
+
+#212. Word Search II
+
+from typing import List
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = None  # Will store the full word at end node
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        root = TrieNode()
+        result = set()
+
+        # Build Trie
+        for word in words:
+            node = root
+            for char in word:
+                if char not in node.children:
+                    node.children[char] = TrieNode()
+                node = node.children[char]
+            node.is_word = word  # Mark the complete word
+
+        rows, cols = len(board), len(board[0])
+
+        def dfs(r, c, node):
+            char = board[r][c]
+
+            # If current char not in Trie path → stop
+            if char not in node.children:
+                return
+
+            next_node = node.children[char]
+
+            # If word found → add to result
+            if next_node.is_word:
+                result.add(next_node.is_word)
+                next_node.is_word = None  # Avoid duplicate results
+
+            # Backtrack
+            board[r][c] = "#"  # Mark as visited
+
+            # Explore neighbors
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] != "#":
+                    dfs(nr, nc, next_node)
+
+            # Restore character
+            board[r][c] = char
+
+        # Start DFS from every cell
+        for r in range(rows):
+            for c in range(cols):
+                dfs(r, c, root)
+
+        return list(result)
+    
