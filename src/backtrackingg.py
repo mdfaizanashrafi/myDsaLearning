@@ -406,3 +406,107 @@ class Solution:
                         return True
         return False
     
+#=====================================================================================
+
+#131. Palindrome Partitioning
+
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        result = []
+
+        def is_palindrome(sub):
+            return sub == sub[::-1]
+        
+        def backtrack(start, path):
+            if start == len(s):
+                result.append(path[:])
+                return
+
+            for end in range(start+1, len(s)+1):
+                substring = s[start:end]
+                if is_palindrome(substring):
+                    path.append(substring)
+                    backtrack(end,path)
+                    path.pop()
+
+        backtrack(0,[])
+        return result
+        
+#=========================================================================
+
+#17. Letter Combinations of a Phone Number
+
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        if not digits:
+            return []
+        
+        phone_map = {
+            "2": "abc",
+            "3": "def",
+            "4": "ghi",
+            "5": "jkl",
+            "6": "mno",
+            "7": "pqrs",
+            "8": "tuv",
+            "9": "wxyz"
+        }
+        result =[]
+        def backtrack(index, path):
+            if index == len(digits):
+                result.append("".join(path))
+                return
+            
+            possible_letters =  phone_map[digits[index]]
+            for letter in possible_letters:
+                path.append(letter)
+                backtrack(index+1, path)
+                path.pop()
+        
+        backtrack(0, [])
+        return result
+
+#================================================================================
+
+#51: N-Queens
+
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        result = []
+        col_set = set()
+        neg_diag = set()
+        pos_diag = set()
+        state = []
+
+        def is_safe(row,col):
+            return not (col in col_set or (row-col) in neg_diag or (row+col) in pos_diag)
+        
+        def backtrack(row):
+            if row ==n:
+                board = []
+                for r in range(n):
+                    row_str = ['.']*n
+                    row_str[state[r]] = 'Q'
+                    board.append("".join(row_str))
+                
+                result.append(board)
+                return
+
+            for col in range(n):
+                if not is_safe(row,col):
+                    continue
+                
+                state.append(col)
+                col_set.add(col)
+                neg_diag.add(row-col)
+                pos_diag.add(row+col)
+
+                backtrack(row+1)
+                state.pop()
+                col_set.remove(col)
+                neg_diag.remove(row-col)
+                pos_diag.remove(row+col)
+
+        backtrack(0)
+        return result
+    
