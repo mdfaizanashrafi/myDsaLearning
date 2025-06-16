@@ -1792,3 +1792,42 @@ class Solution:
 
         return list(result)
     
+#==================================================================================================
+
+#Subsets: Leetcode 78
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        def backtrack(start, path):
+            result.append(path[:])
+            for i in range(start, len(nums)):
+                path.append(nums[i])
+                backtrack(i+1, path)
+                path.pop()
+        
+        backtrack(0,[])
+        return result
+    
+#===========================================================================================
+#39. Combination Sum
+
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        result = []
+        def backtrack(start, path, total):
+            if total == target:
+                result.append(path[:])
+                return
+
+            if total>target:
+                return
+            for i in range(start, len(candidates)):
+                num = candidates[i]
+                path.append(num)
+                backtrack(i, path, total+num)
+                path.pop()
+        
+        backtrack(0,[],0)
+        return result 
+    
