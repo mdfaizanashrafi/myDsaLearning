@@ -1831,3 +1831,55 @@ class Solution:
         backtrack(0,[],0)
         return result 
     
+#=================================================================================
+
+#40. Combination Sum II
+
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        result = []
+        candidates.sort()
+        def backtrack(start, path, total):
+            if total == target:
+                result.append(path[:])
+                return
+            if total> target:
+                return
+            prev = -1
+            for i in range(start, len(candidates)):
+                num = candidates[i]
+                if num == prev:
+                    continue
+                prev = num
+                path.append(num)
+                backtrack(i+1, path, total+num)
+                path.pop()
+        
+        backtrack(0,[],0)
+        return result
+
+#============================================================================
+
+#46: Permutatiosn:
+
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        def backtrack(path, used):
+            if len(path) == len(nums):
+                result.append(path[:])
+                return
+
+            for i in range(len(nums)):
+                if not used[i]:
+                    used[i] = True
+
+                    path.append(nums[i])
+                    backtrack(path, used)
+                    path.pop()
+                    used[i] = False
+
+        used = [False]*len(nums)
+        backtrack([],used)
+        return result
+    
