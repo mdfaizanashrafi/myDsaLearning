@@ -352,3 +352,57 @@ class Solution:
         backtrack([],used)
         return result
     
+#==================================================================================
+#90. Subsets II
+
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        result = []
+        def backtrack(start, path):
+            result.append(path[:])
+            for i in range(start, len(nums)):
+                if i> start and nums[i] == nums[i-1]:
+                    continue
+
+                path.append(nums[i])
+                backtrack(i+1, path)
+                path.pop()
+        
+        backtrack(0,[])
+        return result
+    
+#==============================================================================
+#79: Word Search
+
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        rows, cols = len(board), len(board[0])
+        def dfs(r,c,index):
+            if index == len(word):
+                return True
+            if r<0 or c<0 or r>=rows or c>= cols:
+                return False
+
+            if board[r][c] != word[index]:
+                return False
+            temp = board[r][c]
+            board[r][c] = "#"
+
+            found = (
+                    dfs(r+1,c,index+1) or 
+                    dfs(r-1,c,index+1) or
+                    dfs(r,c+1,index+1) or
+                    dfs(r,c-1,index+1)
+            )
+
+            board[r][c] = temp
+            return found
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == word[0]:
+                    if dfs(r,c,0):
+                        return True
+        return False
+    
