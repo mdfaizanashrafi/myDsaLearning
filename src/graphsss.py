@@ -291,3 +291,120 @@ That’s how social media finds your "suggested" friends!
 
 """
 
+#================================================================================
+
+#200. Number of Islands
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+
+        rows, cols = len(grid), len(grid[0])
+
+        def dfs(r,c):
+            if r<0 or c< 0 or r>=rows or c>=cols or grid[r][c] == "0":
+                return
+            grid[r][c]="0"
+
+            dfs(r+1,c)
+            dfs(r-1,c)
+            dfs(r,c+1)
+            dfs(r,c-1)
+
+        count = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c]=="1":
+                    dfs(r,c)
+                    count += 1
+        return count 
+    
+#=========================================================================
+
+#695. Max Area of Island
+
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        if not grid:
+            return 0
+        rows= len(grid)
+        cols = len(grid[0])
+
+        def dfs(r,c):
+            if r<0 or c<0 or r>= rows or c>= cols or grid[r][c] == 0:
+                return 0
+            grid[r][c]=0
+
+            area =1
+            area += dfs(r+1,c)
+            area+= dfs(r-1,c)
+            area+= dfs(r,c+1)
+            area+= dfs(r, c-1)
+            return area
+
+        max_area = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c]==1:
+                    current_area = dfs(r,c)
+                    max_area = max(max_area, current_area)
+
+        return max_area
+
+#====================================================================
+
+#133. Clone Graph
+
+
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+
+
+from typing import Optional
+class Solution:
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        if not node:
+            return None
+
+        old_to_new = {}
+        queue = deque([node])
+        old_to_new[node] = Node(node.val)
+
+        while queue:
+            curr = queue.popleft()
+            for neighbor in curr.neighbors:
+                if neighbor not in old_to_new:
+                    old_to_new[neighbor] = Node(neighbor.val)
+                    queue.append(neighbor)
+                old_to_new[curr].neighbors.append(old_to_new[neighbor])
+
+        return old_to_new[node]
+
+#=============================================================================
+
+#LeetCode Problem #286: Walls and Gates
+
+class Solution:
+    def islandsAndTreasure(self, grid: List[List[int]]) -> None:
+        ROWS, COLS = len(grid), len(grid[0])
+        queue = deque()
+        directions = [(-1,0),(1,0),(0,-1),(0,1)]
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c]==0:
+                    queue.append((r,c))
+
+        while queue:
+            r,c = queue.popleft()
+            for dr,dc in directions:
+                nr,nc = r+dr, c+dc
+
+                if 0<=nr <ROWS and 0<=nc<COLS and grid[nr][nc] == 2147483647:
+                    grid[nr][nc] = grid[r][c]+1
+                    queue.append((nr,nc))
+
