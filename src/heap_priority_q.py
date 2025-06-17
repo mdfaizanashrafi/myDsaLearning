@@ -69,3 +69,21 @@ class Solution:
 
 #621. Task Scheduler
 
+from collections import Counter
+from typing import List
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        if n == 0:
+            return len(tasks)  # No cooldown needed
+
+        freq = list(Counter(tasks).values())
+        max_freq = max(freq)
+        max_count = freq.count(max_freq)
+
+        # Minimum time based on scheduling most frequent tasks
+        units_needed = (max_freq - 1) * (n + 1) + max_count
+
+        # Either fit into scheduled slots or just do all tasks sequentially
+        return max(len(tasks), units_needed)
+
