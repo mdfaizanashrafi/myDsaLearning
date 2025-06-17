@@ -1,5 +1,267 @@
 
+"""
+# 📝 **Notes: Heaps and Priority Queues**
 
+## 🔹 1. Introduction
+
+### What is a Heap?
+A **heap** is a specialized tree-based data structure that satisfies the **heap property**. It is commonly used to implement **priority queues** and for efficient sorting (e.g., heap sort).
+
+Heaps are typically implemented using arrays and can be visualized as complete binary trees.
+
+---
+
+## 🔹 2. Types of Heaps
+
+There are two main types of heaps:
+
+| Type | Description |
+|------|-------------|
+| **Max-Heap** | The value of each parent node is greater than or equal to the values of its children. Root contains the maximum element. |
+| **Min-Heap** | The value of each parent node is less than or equal to the values of its children. Root contains the minimum element. |
+
+> In both cases, the tree must be a **complete binary tree** (i.e., all levels fully filled except possibly the last one, which is filled left to right).
+
+---
+
+## 🔹 3. Structure of a Heap
+
+Each node in the heap can be represented in an array with the following relationships:
+
+Given index `i`:
+- Parent: `floor((i - 1) / 2)`
+- Left child: `2 * i + 1`
+- Right child: `2 * i + 2`
+
+Example:
+```
+Index:     0   1   2   3   4   5
+Array:    [10, 9, 8, 7, 6, 5]
+```
+This represents a max-heap.
+
+---
+
+## 🔹 4. Basic Operations on Heap
+
+| Operation | Description | Time Complexity |
+|----------|-------------|------------------|
+| **Insert** | Adds an element to the heap while maintaining the heap property | O(log n) |
+| **Extract Max/Min** | Removes and returns the root (max or min) | O(log n) |
+| **Peek (Top)** | Returns the root without removing it | O(1) |
+| **Heapify** | Restores heap property after insertion or deletion | O(log n) |
+| **Build Heap** | Converts an arbitrary array into a heap | O(n) |
+| **Delete** | Deletes a specific element from the heap | O(log n) |
+
+---
+
+## 🔹 5. Heapify
+
+Heapify is the process of converting a binary tree into a heap.
+
+### Max Heapify Algorithm (for array):
+
+```python
+def max_heapify(arr, n, i):
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        max_heapify(arr, n, largest)
+```
+
+Similarly, we have `min_heapify`.
+
+---
+
+## 🔹 6. Building a Heap
+
+To build a heap from an array of size `n`, we apply `heapify` starting from the last non-leaf node down to the root.
+
+```python
+def build_max_heap(arr):
+    n = len(arr)
+    for i in range(n // 2 - 1, -1, -1):
+        max_heapify(arr, n, i)
+```
+
+Time complexity: **O(n)**
+
+---
+
+## 🔹 7. Insertion in Heap
+
+Steps:
+1. Add the new element at the end of the array.
+2. Compare it with its parent and swap if necessary (bubble up).
+3. Repeat until heap property is restored.
+
+```python
+def insert(arr, value):
+    arr.append(value)
+    i = len(arr) - 1
+    while i > 0 and arr[(i - 1) // 2] < arr[i]:
+        parent = (i - 1) // 2
+        arr[i], arr[parent] = arr[parent], arr[i]
+        i = parent
+```
+
+---
+
+## 🔹 8. Deletion in Heap
+
+Only the root can be deleted directly.
+
+Steps:
+1. Replace root with the last element.
+2. Remove the last element.
+3. Heapify the root downwards.
+
+```python
+def delete_root(arr):
+    n = len(arr)
+    if n == 0:
+        return None
+    root = arr[0]
+    arr[0] = arr[-1]
+    arr.pop()
+    max_heapify(arr, len(arr), 0)
+    return root
+```
+
+---
+
+## 🔹 8. Applications of Heaps
+
+- **Priority Queue Implementation**
+- **Heap Sort**
+- **Graph Algorithms** (e.g., Dijkstra’s algorithm, Prim’s MST)
+- **Finding k-th Largest/Smallest Element**
+- **Merging k Sorted Arrays**
+
+---
+
+## 🔹 9. Priority Queue
+
+### What is a Priority Queue?
+
+A **priority queue** is an abstract data type similar to a queue, where each element has a priority associated with it. Elements with higher priority are served before those with lower priority.
+
+It is typically implemented using a **heap**.
+
+### Key Operations
+
+| Operation | Description |
+|----------|-------------|
+| `insert(item, priority)` | Inserts an item with given priority |
+| `extract_max()` / `extract_min()` | Removes and returns the highest/lowest priority item |
+| `peek()` | Returns the highest/lowest priority item without removing |
+| `is_empty()` | Checks if queue is empty |
+
+### Implementations
+
+- Using **array** (unsorted or sorted): O(n) or O(1) insert, O(n) extract
+- Using **linked list**: Similar to array
+- Using **binary heap**: Efficient – O(log n) insert and extract
+
+---
+
+## 🔹 10. Python Implementation (Using heapq)
+
+Python provides a built-in module `heapq` for implementing **min-heaps**.
+
+### Example:
+
+```python
+import heapq
+
+# Min-heap example
+heap = []
+heapq.heappush(heap, 3)
+heapq.heappush(heap, 1)
+heapq.heappush(heap, 2)
+
+print(heapq.heappop(heap))  # Output: 1
+```
+
+For **max-heap**, you can invert the values by inserting negatives.
+
+```python
+heap = []
+heapq.heappush(heap, -10)
+heapq.heappush(heap, -5)
+heapq.heappush(heap, -7)
+
+print(-heapq.heappop(heap))  # Output: 10
+```
+
+---
+
+## 🔹 11. Time and Space Complexities
+
+| Operation | Time Complexity | Space Complexity |
+|----------|------------------|------------------|
+| Build Heap | O(n) | O(n) |
+| Insert | O(log n) | O(1) |
+| Extract Max/Min | O(log n) | O(1) |
+| Peek | O(1) | O(1) |
+| Delete | O(log n) | O(1) |
+
+---
+
+## 🔹 12. Variants of Heaps
+
+| Variant | Description |
+|---------|-------------|
+| **Binary Heap** | Standard heap, as discussed above |
+| **Binomial Heap** | Supports faster union operations |
+| **Fibonacci Heap** | Amortized better performance for some operations (used in advanced algorithms like Dijkstra's) |
+| **Ternary Heap** | Each node has up to 3 children |
+| **k-ary Heap** | Generalization with k children per node |
+
+---
+
+## 🔹 13. Comparison: Stack, Queue vs Priority Queue
+
+| Data Structure | Order | Use Case |
+|----------------|-------|----------|
+| Stack | LIFO | Function calls, recursion |
+| Queue | FIFO | Task scheduling |
+| Priority Queue | Based on priority | Job scheduling, graph algorithms |
+
+---
+
+## 🔹 14. Summary Table
+
+| Feature | Binary Heap (Min/Max) | Priority Queue |
+|--------|------------------------|----------------|
+| Underlying Structure | Array (Complete Binary Tree) | Usually implemented with heap |
+| Insert | O(log n) | O(log n) |
+| Delete | O(log n) | O(log n) |
+| Access Min/Max | O(1) | O(1) |
+| Best for | Dynamic prioritization | Scheduling, optimization problems |
+
+---
+
+## 🔹 15. Practice Problems (LeetCode / GFG Style)
+
+1. **Implement a Max Heap from scratch**
+2. **Merge K Sorted Lists**
+3. **Find Kth Largest Element in an Array**
+4. **Rearrange String k Distance Apart**
+5. **Reorganize String**
+6. **Task Scheduler**
+7. **K Closest Points to Origin**
+8. **Top K Frequent Words**
+"""
 
 #===========================================================================================
 
@@ -170,9 +432,5 @@ class MedianFinder:
         else:
             return (-self.max_heap[0]+self.min_heap[0])/2
 
-
-# Your MedianFinder object will be instantiated and called as such:
-# obj = MedianFinder()
-# obj.addNum(num)
-# param_2 = obj.findMedian()
+#======================================================================================
 
