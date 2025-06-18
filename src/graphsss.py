@@ -446,3 +446,114 @@ class Solution:
             time += 1
         return time if fresh == 0 else -1
 
+#======================================================================================
+
+#417. Pacific Atlantic Water Flow
+
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        if not heights or not heights[0]:
+            return []
+        rows, cols = len(heights), len(heights[0])
+        directions = [(-1,0),(1,0),(0,-1),(0,1)]
+
+        can_reach_pacific = [[False]*cols for _ in range(rows)]
+        can_reach_atlantic = [[False]*cols for _ in range(rows)]
+
+        def dfs(r,c,visited):
+            if visited[r][c]:
+                return 
+            visited[r][c] = True
+
+            for dr,dc in directions:
+                nr,nc = r+dr, c+dc
+
+                if 0<=nr<rows and 0<=nc<cols:
+                    if heights[nr][nc] >= heights[r][c]:
+                        dfs(nr,nc,visited)
+
+        for r in range(rows):
+            dfs(r,0,can_reach_pacific)
+            dfs(r,cols-1,can_reach_atlantic)
+
+        for c in range(cols):
+            dfs(0,c,can_reach_pacific)
+            dfs(rows-1, c, can_reach_atlantic)
+
+        result = []
+
+        for r in range(rows):
+            for c in range(cols):
+                if can_reach_pacific[r][c] and can_reach_atlantic[r][c]:
+                    result.append([r,c])
+
+        return result
+    
+#====================================================================================
+
+#130. Surrounded Regions
+
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        if not board or not board[0]:
+            return
+
+        rows, cols = len(board), len(board[0])
+
+        def dfs(r,c):
+            if r<0 or c<0 or r>= rows or c>= cols or board[r][c] != "O":
+                return
+
+            board[r][c] = "T"
+
+            dfs(r+1,c)
+            dfs(r-1,c)
+            dfs(r,c+1)
+            dfs(r,c-1)
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == "O" and (r==0 or r==rows-1 or c==0 or c== cols-1):
+                    dfs(r,c)
+        
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c]=="O":
+                    board[r][c]="X"
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c]=="T":
+                    board[r][c]= "O"
+
+#=====================================================================================
+
+#207. Course Schedule
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        graph = [[] for _ in range(numCourses)]
+        in_degree = [0]*numCourses
+        for dest, src in prerequisites:
+            graph[src].append(dest)
+            in_degree[dest] += 1
+
+        queue= deque()
+        for r in range(numCourses):
+            if in_degree[r] == 0:
+                queue.append(r)
+        count = 0
+
+        while queue:
+            curr = queue.popleft()
+            count += 1
+            for neighbor in graph[curr]:
+                in_degree[neighbor] -= 1
+                if in_degree[neighbor]==0:
+                    queue.append(neighbor)
+
+        return count == numCourses
+    
