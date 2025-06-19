@@ -226,4 +226,85 @@ def canPartition(nums):
 | Delete and Earn            | Leetcode 740 |
 | Jump Game II               | Leetcode 45  |
 """
+#=========================================================================================
+
+#70. Climbing Stairs
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+
+        a, b = 1, 2
+        for _ in range(3, n + 1):
+            a, b = b, a + b
+
+        return b
+
+#=========================================================================
+
+#746. Min Cost Climbing Stairs
+
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        n = len(cost)
+        if n==0:
+            return 0
+        if n== 1:
+            return cost[0]
+        
+        dp = [0]*n
+        dp[0] = cost[0]
+        dp[1] = cost[1]
+
+        for i in range(2,n):
+            dp[i] = cost[i]+min(dp[i-1],dp[i-2])
+
+        return min(dp[-1],dp[-2])
+
+#============================================================================
+
+#198. House Robber
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n==0:
+            return 0
+        if n==1:
+            return nums[0]
+
+        dp = [0]*n
+        dp[0],dp[1] = nums[0], max(nums[0],nums[1])
+
+        for i in range(2,n):
+            dp[i]=max(dp[i-1],dp[i-2]+nums[i])
+        
+        return dp[-1]
+
+#============================================================================
+
+#213. House Robber II
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
+
+        if len(nums)==2:
+            return max(nums)
+
+        def rob_linear(houses):
+            prev, curr = 0,0
+
+            for num in houses:
+                temp = curr
+                curr = max(curr, prev+num)
+                prev = temp
+
+            return curr
+
+        return max(rob_linear(nums[:-1]), rob_linear(nums[1:]))
 
