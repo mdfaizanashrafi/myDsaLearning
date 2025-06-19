@@ -363,3 +363,68 @@ class Solution:
 
         return count
 
+#========================================================================================
+
+#91. Decode Ways
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        n = len(s)
+        if n==0:
+            return 0
+
+        dp = [0]*(n+1)
+        dp[0] = 1
+        dp[1] = 0 if s[0] == '0' else 1
+
+        for i in range(2, n+1):
+            if s[i-1] != '0':
+                dp[i] += dp[i-1]
+
+            two_digit = int(s[i-2:i])
+            if 10 <= two_digit <= 26:
+                dp[i] += dp[i-2]
+
+    
+        return dp[n]
+
+#========================================================================================
+
+#322. Coin Change
+
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dp = [float('inf')]*(amount+1)
+        dp[0] = 0
+
+        for i in range(1, amount+1):
+            for coin in coins:
+                if coin <= i:
+                    dp[i] = min(dp[i], dp[i-coin]+1)
+        
+        return dp[amount] if dp[amount] != float('inf') else -1
+
+#======================================================================================
+
+#152. Maximum Product Subarray
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+
+        max_prod = nums[0]
+        curr_max = nums[0]
+        curr_min = nums[0]
+
+        for i in range(1, len(nums)):
+            num = nums[i]
+
+            temp = curr_max
+            curr_max= max(num, curr_max*num, curr_min*num)
+            curr_min = min(num, temp*num, curr_min*num)
+
+            max_prod = max(max_prod, curr_max)
+
+        return max_prod
+    
