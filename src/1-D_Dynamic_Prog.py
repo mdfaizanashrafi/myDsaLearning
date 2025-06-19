@@ -428,3 +428,43 @@ class Solution:
 
         return max_prod
     
+#============================================================================
+
+#139. Word Break
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        word_set = set(wordDict)
+        n = len(s)
+        dp = [False]*(n+1)
+        dp[0] = True
+
+        for i in range(1, n+1):
+            for j in range(i):
+                if dp[j] and s[j:i] in word_set:
+                    dp[i] = True
+
+                    break
+
+        return dp[n]
+
+#================================================================================
+
+#300. Longest Increasing Subsequence
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n==0:
+            return 0
+
+        dp = [1]*n
+
+        for i in range(1,n):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    dp[i] = max(dp[i], dp[j]+1)
+                
+
+        return max(dp)
+
