@@ -2831,3 +2831,41 @@ class Solution:
 
         return max(dp)
 
+#==========================================================================================
+
+#416. Partition Equal Subset Sum
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        total = sum(nums)
+        if total %2 != 0:
+            return False
+
+        target = total // 2
+
+        dp = [False]*(target+1)
+        dp[0] = True
+
+        for num in nums:
+            for i in range(target, num-1, -1):
+                dp[i] = dp[i] or dp[i-num]
+
+        return dp[target]
+
+#===========================================================================================
+
+#62. Unique Paths
+
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        dp = [1]*n
+        for _ in range(1,m):
+            for j in range(1,n):
+                dp[j] += dp[j-1]
+
+        return dp[-1]
+
+#============================================================================================
+
+#1143. Longest Common Subsequence
+
