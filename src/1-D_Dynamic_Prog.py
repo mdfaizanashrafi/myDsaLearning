@@ -308,3 +308,30 @@ class Solution:
 
         return max(rob_linear(nums[:-1]), rob_linear(nums[1:]))
 
+#=====================================================================================
+
+#5. Longest Palindromic Substring
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        n = len(s)
+        dp = [[False]*n for _ in range(n)]
+        longest = ""
+
+        for end in range(n):
+            for start in range(end+1):
+                if start == end:
+                    dp[start][end] = True
+
+                elif start +1 == end:
+                    dp[start][end] = (s[start]==s[end])
+                
+                else:
+                    dp[start][end] = (s[start]==s[end] and dp[start+1][end-1])
+                
+                if dp[start][end]:
+                    if end-start+1 > len(longest):
+                        longest = s[start:end+1]
+                    
+        return longest
+
