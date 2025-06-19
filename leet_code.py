@@ -2466,3 +2466,126 @@ class Solution:
             
         return result if len(result) == numCourses else []
 
+#=============================================================================================
+
+#LeetCode 261: Graph Valid Tree
+
+class Solution:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # Edge case: no edges → empty or single node is always a tree
+        if n == 0:
+            return True
+
+        parent = list(range(n))
+
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+
+        def union(x, y):
+            root_x = find(x)
+            root_y = find(y)
+            if root_x == root_y:
+                return False  # Already connected → cycle!
+            parent[root_x] = root_y
+            return True
+
+        for u, v in edges:
+            if not union(u, v):
+                return False  # Cycle found
+
+        # Finally: should have exactly n - 1 unions
+        return sum(find(i) == i for i in range(n)) == 1
+    
+#==============================================================================================
+
+#LeetCode 547: Number of Connected Components in an Undirected Graph
+
+from typing import List
+from collections import defaultdict
+
+class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -> int:
+        # Step 1: Build adjacency list
+        graph = defaultdict(list)
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+
+        visited = set()
+        
+        def dfs(node):
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    dfs(neighbor)
+
+        components = 0
+        for i in range(n):
+            if i not in visited:
+                visited.add(i)
+                dfs(i)
+                components += 1
+
+        return components
+    
+#============================================================================
+
+#684. Redundant Connection
+
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        parent = list(range(1001))
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+        
+        def union(x,y):
+            root_x = find(x)
+            root_y = find(y)
+            if root_x == root_y:
+                return False
+            
+            parent[root_x]= root_y
+
+            return True
+
+        for u,v in edges:
+            if not union(u,v):
+                return [u,v]
+            
+        return []
+    
+#==================================================================================
+
+#127. Word Ladder
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        if endWord not in wordList:
+            return 0
+
+        L = len(beginWord)
+        pattern_map = defaultdict(list)
+        for word in wordList:
+            for i in range(L):
+                pattern = word[:i] + "*" +word[i+1:]
+                pattern_map[pattern].append(word)
+        visited = set([beginWord])
+        queue = deque([(beginWord,1)])
+
+        while queue:
+            current_word, level = queue.popleft()
+            for i in range(L):
+                pattern = current_word[:i]+"*"+current_word[i+1:]
+                for neighbor in pattern_map[pattern]:
+                    if neighbor == endWord:
+                        return level +1
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        queue.append((neighbor, level+1))
+                
+        return 0
+
