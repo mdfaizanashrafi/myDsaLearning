@@ -335,3 +335,31 @@ class Solution:
                     
         return longest
 
+#=================================================================================
+
+#647. Palindromic Substrings
+
+class Solution:
+    def countSubstrings(self, s: str) -> int:
+        n = len(s)
+        count = 0
+        dp = [ [False]*n for _ in range(2)]  # Only keep 2 rows
+
+        for i in range(n-1, -1, -1):  # Start from bottom
+            for j in range(i, n):
+                if i == j:
+                    dp[i%2][j] = True
+                    count += 1
+                elif i + 1 == j:
+                    if s[i] == s[j]:
+                        dp[i%2][j] = True
+                        count += 1
+                else:
+                    if s[i] == s[j] and dp[(i+1)%2][j-1]:
+                        dp[i%2][j] = True
+                        count += 1
+                    else:
+                        dp[i%2][j] = False
+
+        return count
+
