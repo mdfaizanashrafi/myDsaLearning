@@ -2930,3 +2930,122 @@ class Solution:
 
         return dp[n][amount]
     
+#===============================================================================================
+
+#494. Target Sum
+
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        total = sum(nums)
+        if abs(target) > total or (target+total) %2 !=0:
+            return 0
+
+        s = (target+total)//2
+        n = len(nums)
+
+        dp = [[0]*(s+1) for _ in range(n+1)]
+        dp[0][0] = 1
+
+        for i in range(1,n+1):
+            num = nums[i-1]
+            for j in range(s+1):
+                if j<num:
+                    dp[i][j] = dp[i-1][j]
+                else:
+                    dp[i][j] = dp[i-1][j] + dp[i-1][j-num]
+        
+        return dp[n][s]
+
+#====================================================================================
+
+#97. Interleaving String
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        m, n = len(s1), len(s2)
+        if m + n != len(s3):
+            return False
+        
+        dp = [[False]*(n+1) for _ in range(m+1)]
+        dp[0][0] = True  # Empty strings are valid
+
+        for i in range(1, m+1):
+            dp[i][0] = dp[i-1][0] and s1[i-1] == s3[i-1]
+        
+        for j in range(1, n+1):
+            dp[0][j] = dp[0][j-1] and s2[j-1] == s3[j-1]
+        
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                one = dp[i-1][j] and s1[i-1] == s3[i+j-1]
+                two = dp[i][j-1] and s2[j-1] == s3[i+j-1]
+                dp[i][j] = one or two
+
+        return dp[m][n]
+    
+#============================================================================================
+
+#329. Longest Increasing Path in a Matrix
+
+from typing import List
+
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        if not matrix or not matrix[0]:
+            return 0
+        
+        rows, cols = len(matrix), len(matrix[0])
+        dp = [[0]*cols for _ in range(rows)]
+        directions = [(-1,0),(1,0),(0,-1),(0,1)]
+
+        def dfs(r, c):
+            # Return cached result if already computed
+            if dp[r][c] != 0:
+                return dp[r][c]
+            
+            max_len = 1  # At least one cell
+
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and matrix[nr][nc] > matrix[r][c]:
+                    curr_len = 1 + dfs(nr, nc)
+                    max_len = max(max_len, curr_len)
+
+            dp[r][c] = max_len
+            return max_len
+
+        result = 0
+        for r in range(rows):
+            for c in range(cols):
+                result = max(result, dfs(r, c))
+
+        return result
+
+#========================================================================================
+
+#115. Distinct Subsequences
+
+class Solution:
+    def numDistinct(self, s: str, t: str) -> int:
+        m, n = len(s), len(t)
+        if n > m:
+            return 0
+
+        # Initialize DP table
+        dp = [[0]*(m+1) for _ in range(n+1)]
+
+        # Base case: empty t matches every s
+        for j in range(m+1):
+            dp[0][j] = 1
+
+        for i in range(1, n+1):
+            for j in range(1, m+1):
+                # If chars don't match, only option is to ignore last char of s
+                if s[j-1] != t[i-1]:
+                    dp[i][j] = dp[i][j-1]
+                else:
+                    # Match: add ways from both matched and unmatched paths
+                    dp[i][j] = dp[i-1][j-1] + dp[i][j-1]
+
+        return dp[n][m]
+
