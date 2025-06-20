@@ -229,3 +229,106 @@ $$
 
 #48. Rotate Image
 
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        n = len(matrix)
+    
+        for i in range(n // 2):
+            for j in range(i, n - i - 1):
+            # Save top element
+                temp = matrix[i][j]
+            
+            # Move left to top
+                matrix[i][j] = matrix[n - 1 - j][i]
+            
+            # Move bottom to left
+                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j]
+            
+            # Move right to bottom
+                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i]
+            
+            # Move saved top to right
+                matrix[j][n - 1 - i] = temp
+              
+#==========================================================================
+
+#54: Spiral Matrix:
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix or not matrix[0]:
+            return []
+
+        m, n = len(matrix), len(matrix[0])
+        result = []
+        top, bottom = 0, m - 1
+        left, right = 0, n - 1
+    
+        while len(result) < m * n:
+            for col in range(left, right + 1):
+                result.append(matrix[top][col])
+            top += 1
+        
+            if len(result) == m * n:
+                break
+            for row in range(top, bottom + 1):
+                result.append(matrix[row][right])
+            right -= 1
+        
+            if len(result) == m * n:
+                break
+            for col in range(right, left - 1, -1):
+                result.append(matrix[bottom][col])
+            bottom -= 1
+        
+            if len(result) == m * n:
+                break
+        
+            for row in range(bottom, top - 1, -1):
+                result.append(matrix[row][left])
+            left += 1
+
+        return result
+    
+#======================================================================================
+
+#73. Set Matrix Zeroes
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+            
+        if not matrix or not matrix[0]:
+            return
+
+        m, n = len(matrix), len(matrix[0])
+        first_row_has_zero = any(matrix[0][j] == 0 for j in range(n))
+        first_col_has_zero = any(matrix[i][0] == 0 for i in range(m))
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+
+    
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+
+    
+        if first_row_has_zero:
+            for j in range(n):
+                matrix[0][j] = 0
+
+   
+        if first_col_has_zero:
+            for i in range(m):
+                matrix[i][0] = 0
+              
