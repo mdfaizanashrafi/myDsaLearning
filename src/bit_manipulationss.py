@@ -245,3 +245,124 @@ int('1010', 2)  # 10
 
 #=======================================================================================
 
+#136. Single Number
+
+class Solution:
+    """
+    #BRUTE FORCE:
+
+    def singleNumber(self, nums: List[int]) -> int:
+        count = {}
+        for num in nums:
+            count[num]=count.get(num,0)+1
+        
+        for num in count:
+            if count[num]==1:
+                return num
+        """
+    def singleNumber(self, nums: List[int]) -> int:
+        result = 0
+        for num in nums:
+            result ^= num
+        return result
+
+#=======================================================================
+
+#191. Number of 1 Bits
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+       count = 0
+       for _ in range(32):
+          count += n&1
+          n >>=1
+       return count
+    
+#======================================================
+
+#number of 1 bits #191
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+       count = 0
+       for _ in range(32):
+          count += n&1
+          n >>=1
+       return count
+
+#============================================================
+
+#338. Counting Bits
+
+class Solution:
+    def countBits(self, n: int) -> List[int]:
+        dp = [0] * (n + 1)
+        for i in range(1, n + 1):
+            dp[i] = dp[i >> 1] + (i & 1)
+        return dp
+    
+#=================================================================
+
+#190. Reverse Bits
+
+def reverseBits(n: int) -> int:
+    result = 0
+    for _ in range(32):
+        result = (result << 1) | (n & 1)  # Add last bit of n to result
+        n >>= 1  # Move to next bit
+    return result
+
+#================================================================
+
+#268. Missing Number
+
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        xor = 0
+        n = len(nums)
+    
+    # XOR all numbers from 0 to n
+        for i in range(n + 1):
+            xor ^= i
+
+    # XOR all elements in the array
+        for num in nums:
+            xor ^= num
+
+        return xor
+
+#================================================================
+
+#371. Sum of Two Integers
+
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        MASK = 0xFFFFFFFF
+        MAX_INT = 0x7FFFFFFF  
+
+        while b != 0:
+            a, b = (a ^ b), (a & b) << 1
+            a = (a & MASK)
+        return a if a <= MAX_INT else ~(a ^ MASK)
+
+#===============================================================
+
+#7. Reverse Integer
+
+def reverse(x: int) -> int:
+    INT_MIN, INT_MAX = -2**31, 2**31 - 1
+    sign = -1 if x < 0 else 1
+    x_abs = abs(x)
+    reversed_num = 0
+
+    while x_abs != 0:
+        digit = x_abs % 10
+        x_abs //= 10
+        if reversed_num > (INT_MAX - digit) // 10:
+            return 0
+        reversed_num = reversed_num * 10 + digit
+    return sign * reversed_num
+
+#================================================================
+
+#
