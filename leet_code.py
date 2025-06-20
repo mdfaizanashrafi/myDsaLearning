@@ -2884,3 +2884,49 @@ class Solution:
         return dp[m][n]
     
 #============================================================================================
+
+#309. Best Time to Buy and Sell Stock with Cooldown
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices:
+            return 0
+
+        n = len(prices)
+        hold = -prices[0]
+        sold = 0
+        rest = 0
+
+        for i in range(1,n):
+            prev_hold = hold
+            prev_sold = sold
+            prev_rest = rest
+
+            hold = max(prev_hold, prev_rest - prices[i])
+            sold = prev_hold + prices[i]
+            rest = max(prev_rest, prev_sold)
+
+        return max(sold, rest)
+
+#============================================================================================
+
+#518. Coin Change II
+
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        n = len(coins)
+        dp = [[0]*(amount+1) for _ in range(n+1)]
+
+        for i in range(n+1):
+            dp[i][0] = 1
+
+        for i in range(1, n+1):
+            for j in range(1, amount+1):
+                if coins[i-1] > j:
+                    dp[i][j] = dp[i-1][j]
+
+                else:
+                    dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]
+
+        return dp[n][amount]
+    
