@@ -3049,3 +3049,85 @@ class Solution:
 
         return dp[n][m]
 
+#===================================================================================
+
+#72. Edit Distance
+
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        m, n = len(word1), len(word2)
+        # Create a 2D DP table
+        dp = [[0]*(n+1) for _ in range(m+1)]
+
+        # Base case: empty string
+        for i in range(m+1):
+            dp[i][0] = i
+        for j in range(n+1):
+            dp[0][j] = j
+
+        # Fill the table
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = 1 + min(
+                        dp[i-1][j],   # Delete
+                        dp[i][j-1],   # Insert
+                        dp[i-1][j-1]  # Replace
+                    )
+
+        return dp[m][n]
+
+#=========================================================================
+
+#312. Burst Balloons
+
+from typing import List
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        # Add 1s at both ends
+        nums = [1] + nums + [1]
+        n = len(nums)
+
+        # Initialize DP table
+        dp = [[0]*n for _ in range(n)]
+
+        # Length of interval
+        for length in range(2, n):  # from i to j where j - i >= 2
+            for i in range(n - length):
+                j = i + length
+                for k in range(i+1, j):
+                    # Try bursting nums[k] last
+                    curr = dp[i][k] + dp[k][j] + nums[i] * nums[j] * nums[k]
+                    dp[i][j] = max(dp[i][j], curr)
+
+        return dp[0][n-1]
+
+#====================================================================================
+
+#10: Regular Expression Matching
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+
+        for j in range(2, n + 1):
+            if p[j - 1] == '*':
+                dp[0][j] = dp[0][j - 2]
+    
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if p[j - 1] == '.' or p[j - 1] == s[i - 1]:
+                    dp[i][j] = dp[i - 1][j - 1]
+                elif p[j - 1] == '*':
+                    dp[i][j] = dp[i][j - 2]
+                    if p[j - 2] == '.' or p[j - 2] == s[i - 1]:
+                        dp[i][j] |= dp[i - 1][j]
+
+        return dp[m][n]
+
