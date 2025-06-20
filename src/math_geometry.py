@@ -332,3 +332,56 @@ class Solution:
             for i in range(m):
                 matrix[i][0] = 0
               
+#========================================================================
+
+#202. Happy Number
+
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        def get_next(num: int) -> int:
+            return sum(int(digit) ** 2 for digit in str(num))
+    
+        slow = n
+        fast = get_next(n)
+    
+        while fast != 1 and slow != fast:
+            slow = get_next(slow)
+            fast = get_next(get_next(fast))
+    
+        return fast == 1
+
+#======================================================================
+
+#66. Plus One
+
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        n = len(digits)
+
+        for i in range(n - 1, -1, -1):
+            if digits[i] < 9:
+                digits[i] += 1
+                return digits
+            digits[i] = 0  
+
+        return [1] + digits
+    
+#======================================================================
+
+#50. Pow(x, n)
+
+class Solution:
+    def myPow(self, x: float, n: int) -> float:
+        def helper(x, n):
+            if n == 0:
+                return 1
+            half = helper(x, n // 2)
+            if n % 2 == 0:
+                return half * half
+            else:
+                return half * half * x
+
+        N = abs(n)
+        result = helper(x, N)
+        return result if n >= 0 else 1 / result
+  
