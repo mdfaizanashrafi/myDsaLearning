@@ -3403,3 +3403,83 @@ class Solution:
         result = helper(x, N)
         return result if n >= 0 else 1 / result
   
+#================================================================================
+
+#43: Multiply Strings:
+
+class Solution:
+    def multiply(self, num1: str, num2: str) -> str:
+
+        if num1 == "0" or num2 == "0":
+            return "0"
+
+        m, n = len(num1), len(num2)
+        result = [0] * (m + n)
+
+    # Reverse strings for easy processing
+        num1 = num1[::-1]
+        num2 = num2[::-1]
+
+    # Multiply digit by digit
+        for i in range(m):
+            for j in range(n):
+                digit1 = ord(num1[i]) - ord('0')
+                digit2 = ord(num2[j]) - ord('0')
+                product = digit1 * digit2
+
+            # Position in result
+                pos1 = i + j
+                pos2 = i + j + 1
+
+            # Add to result and handle carry
+                result[pos1] += product
+                result[pos2] += result[pos1] // 10
+                result[pos1] %= 10
+
+    # Remove trailing zeros and build final string
+        while result[-1] == 0:
+            result.pop()
+
+        return ''.join(str(digit) for digit in reversed(result))
+
+#==========================================================================
+
+#2013. Detect Squares
+
+from collections import defaultdict
+from typing import List
+
+class DetectSquares:
+
+    def __init__(self):
+        # Dictionary to store frequency of each point
+        self.points = defaultdict(int)
+        # List to keep unique points for fast iteration
+        self.point_list = []
+
+    def add(self, point: List[int]) -> None:
+        x, y = point
+        key = (x, y)
+        self.points[key] += 1
+
+        # Only add to point_list if it's a new unique point
+        if key not in self.point_list:
+            self.point_list.append(key)
+
+    def count(self, point: List[int]) -> int:
+        x, y = point
+        count = 0
+
+        for (x1, y1) in self.point_list:
+            # Check if (x, y) and (x1, y1) can be diagonal corners of a square
+            if abs(x1 - x) == abs(y1 - y) and x1 != x:
+                # Check if the other two required points exist
+                if (x1, y) in self.points and (x, y1) in self.points:
+                    # Multiply frequencies
+                    count += (
+                        self.points[(x1, y1)] *
+                        self.points[(x1, y)] *
+                        self.points[(x, y1)]
+                    )
+        return count
+    
