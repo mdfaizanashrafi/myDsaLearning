@@ -232,3 +232,212 @@ def topological_sort_dfs(graph, num_nodes):
 """
 #=================================================================================================
 
+#743. Network Delay Time
+
+import heapq
+from collections import defaultdict
+
+class Solution:
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        # Step 1: Build adjacency list
+        graph = defaultdict(list)
+        for u, v, w in times:
+            graph[u].append((v, w))
+        
+        # Step 2: Use min-heap for Dijkstra
+        min_heap = [(0, k)]  # (distance, node)
+        visited = {}
+        
+        while min_heap:
+            dist, node = heapq.heappop(min_heap)
+            
+            if node in visited:
+                continue
+            
+            visited[node] = dist
+            
+            # Visit neighbors
+            for neighbor, weight in graph[node]:
+                if neighbor not in visited:
+                    heapq.heappush(min_heap, (dist + weight, neighbor))
+        
+        # Step 3: If all nodes visited, return max delay
+        return max(visited.values()) if len(visited) == n else -1
+
+#============================================================================
+
+#332. Reconstruct Itinerary
+
+from collections import defaultdict
+from typing import List
+
+class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        # Step 1: Build adjacency list with lex order using min-heap
+        graph = defaultdict(list)
+        
+        # Sort in reverse order so we can pop from end (faster than inserting at front)
+        for src, dst in sorted(tickets, reverse=True):
+            graph[src].append(dst)
+        
+        result = []
+
+        def dfs(node):
+            # Visit all neighbors in lex order
+            while graph[node]:
+                next_node = graph[node].pop()
+                dfs(next_node)
+            result.append(node)
+
+        # Start from JFK
+        dfs("JFK")
+
+        # Result is reversed because we append at end
+        return result[::-1]
+
+#==================================================================================
+
+#1584. Min Cost to Connect All Points
+
+class Solution:
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        n = len(points)
+        if n == 0:
+            return 0
+
+        heap = [(0, 0)]  # (cost, node_index)
+        total_cost = 0
+        visited = set()
+        min_heap = []
+
+        while heap:
+            cost, u = heapq.heappop(heap)
+
+            if u in visited:
+                continue
+
+            visited.add(u)
+            total_cost += cost
+
+            # Add all unvisited neighbors to heap
+            for v in range(n):
+                if v not in visited:
+                    dist = abs(points[u][0] - points[v][0]) + abs(points[u][1] - points[v][1])
+                    heapq.heappush(heap, (dist, v))
+
+        return total_cost if len(visited) == n else -1
+
+#=============================================================================
+
+#778. Swim in Rising Water
+
+import heapq
+from typing import List
+
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        visited = [[False] * n for _ in range(n)]
+        min_heap = [(grid[0][0], 0, 0)]  # (max_time, row, col)
+
+        directions = [(-1,0), (1,0), (0,-1), (0,1)]
+
+        while min_heap:
+            time, r, c = heapq.heappop(min_heap)
+
+            if r == n - 1 and c == n - 1:
+                return time
+
+            if visited[r][c]:
+                continue
+            visited[r][c] = True
+
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < n and 0 <= nc < n and not visited[nr][nc]:
+                    # Push the new path with max time required
+                    new_time = max(time, grid[nr][nc])
+                    heapq.heappush(min_heap, (new_time, nr, nc))
+
+        return -1  # Shouldn't reach here if grid is valid
+
+#================================================================================
+
+#787. Cheapest Flights Within K Stops
+
+class Solution:
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+        # Initialize cost array
+        cost = [float('inf')] * n
+        cost[src] = 0
+
+        # Run Bellman-Ford for k+1 iterations
+        for _ in range(k + 1):
+            curr_cost = cost[:]
+            updated = False
+
+            for u, v, w in flights:
+                if cost[u] != float('inf'):
+                    if cost[v] > cost[u] + w:
+                        curr_cost[v] = min(curr_cost[v], cost[u] + w)
+                        updated = True
+
+            cost = curr_cost
+            if not updated:
+                break  # Early exit if no updates
+
+        return cost[dst] if cost[dst] != float('inf') else -1
+
+#===============================================================================================
+
+#269: Alien Dictionary
+
+from collections import defaultdict, Counter, deque
+from typing import List
+
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        # Step 1: Build graph and in-degree count
+        graph = defaultdict(set)
+        in_degree = Counter({c: 0 for word in words for c in word})
+
+        # Step 2: Build edges from adjacent words
+        for i in range(len(words) - 1):
+            word1, word2 = words[i], words[i + 1]
+
+            min_len = min(len(word1), len(word2))
+            prefix_match = True
+
+            for j in range(min_len):
+                if word1[j] != word2[j]:
+                    # Found a rule: word1[j] -> word2[j]
+                    if word2[j] not in graph[word1[j]]:
+                        graph[word1[j]].add(word2[j])
+                        in_degree[word2[j]] += 1
+                    prefix_match = False
+                    break
+
+            # Edge case: word1 is longer than word2 but all chars match (invalid dict)
+            if prefix_match and len(word1) > len(word2):
+                return ""
+
+        # Step 3: Kahn's Algorithm for Topological Sort
+        queue = deque([c for c in in_degree if in_degree[c] == 0])
+        order = []
+
+        while queue:
+            char = queue.popleft()
+            order.append(char)
+
+            for neighbor in graph[char]:
+                in_degree[neighbor] -= 1
+                if in_degree[neighbor] == 0:
+                    queue.append(neighbor)
+
+        # Step 4: Check if all characters were included (no cycles)
+        if len(order) < len(in_degree):
+            return ""  # Cycle detected
+
+        return ''.join(order)
+    
+#=====================================================================================
