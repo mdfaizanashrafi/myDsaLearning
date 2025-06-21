@@ -3673,3 +3673,166 @@ class Solution:
 
         return max_global
 
+#================================================================================
+
+#55: Jump Game:
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        farthest = 0
+        for i in range(len(nums)):
+            if i > farthest:
+                return False
+            farthest = max(farthest, i + nums[i])
+        return True
+
+#========================================================================
+
+#45. Jump Game II
+
+from typing import List
+
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        if len(nums) < 2:
+            return 0
+
+        jumps = 0
+        farthest = 0
+        current_end = 0
+
+        for i in range(len(nums) - 1):
+            # Update the farthest index we can reach
+            farthest = max(farthest, i + nums[i])
+
+            # When we finish the current jump's range, make another jump
+            if i == current_end:
+                jumps += 1
+                current_end = farthest
+
+        return jumps
+    
+#===============================================================
+
+#134. Gas Station
+
+from typing import List
+
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        total_gas = 0
+        curr_gas = 0
+        start = 0
+
+        for i in range(len(gas)):
+            diff = gas[i] - cost[i]
+            total_gas += diff
+            curr_gas += diff
+
+            if curr_gas < 0:
+                curr_gas = 0
+                start = i + 1
+
+        return start if total_gas >= 0 else -1
+
+#==============================================================================
+
+#846. Hand of Straights
+
+from collections import Counter
+from typing import List
+
+class Solution:
+    def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
+        if len(hand) % groupSize != 0:
+            return False
+
+        count = Counter(hand)
+        sorted_keys = sorted(count)
+
+        for key in sorted_keys:
+            if count[key] > 0:
+                freq = count[key]
+                # Try to build a group starting from this number
+                for i in range(groupSize):
+                    next_card = key + i
+                    if count[next_card] < freq:
+                        return False
+                    count[next_card] -= freq
+        return True
+
+#==================================================================================
+
+#1899. Merge Triplets to Form Target Triplet
+
+from typing import List
+
+class Solution:
+    def mergeTriplets(self, triplets: List[List[int]], target: List[int]) -> bool:
+        # Step 1: Filter out invalid triplets
+        valid = [t for t in triplets if all(t[i] <= target[i] for i in range(3))]
+        
+        # Step 2: Initialize result as [0,0,0] and merge all valid triplets
+        merged = [0, 0, 0]
+        for t in valid:
+            merged = [max(merged[i], t[i]) for i in range(3)]
+
+        # Step 3: Check if merged equals target
+        return merged == target
+    
+#=============================================================================
+
+#763. Partition Labels
+
+from typing import List
+
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        # Step 1: Record last occurrence of each character
+        last_occurrence = {char: idx for idx, char in enumerate(s)}
+
+        result = []
+        start = end = 0
+
+        for i, char in enumerate(s):
+            end = max(end, last_occurrence[char])
+
+            # If we reached the end of the current partition
+            if i == end:
+                result.append(end - start + 1)
+                start = end + 1
+
+        return result
+
+#================================================================================
+
+#678. Valid Parenthesis String
+
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        left_balance = 0
+        right_balance = 0
+        
+        # Left to Right: treat '*' as '('
+        for ch in s:
+            if ch == '(' or ch == '*':
+                left_balance += 1
+            else:
+                left_balance -= 1
+            
+            if left_balance < 0:
+                return False
+        
+        # Right to Left: treat '*' as ')'
+        for ch in reversed(s):
+            if ch == ')' or ch == '*':
+                right_balance += 1
+            else:
+                right_balance -= 1
+            
+            if right_balance < 0:
+                return False
+        
+        return True
+
+#===================================================================================
