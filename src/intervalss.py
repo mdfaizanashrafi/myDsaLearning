@@ -198,5 +198,31 @@ def minMeetingRooms(intervals):
 - Use `heapq` for meeting rooms and priority queues.
 - Avoid slicing unless needed — use indices instead.
 """
-#============================================================================
+#=====================================================================================
 
+#56. Merge Intervals
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        if not intervals:
+            return []
+
+    # Step 1: Sort intervals based on start time
+        intervals.sort(key=lambda x: x[0])
+
+        merged = [intervals[0]]
+
+        for curr in intervals[1:]:
+            last = merged[-1]
+    
+        # Step 2: If current interval overlaps with last, merge
+            if curr[0] <= last[1]:
+                last[1] = max(last[1], curr[1])
+            else:
+                merged.append(curr)
+
+        return merged
+
+#===============================================================================
+
+#

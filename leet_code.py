@@ -3483,3 +3483,59 @@ class DetectSquares:
                     )
         return count
     
+#============================================================================
+
+#57. Insert Interval
+
+class Solution:
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        i = 0
+        n = len(intervals)
+
+        result = []
+
+    # Step 1: Add all intervals that end before newInterval starts
+        while i < n and intervals[i][1] < newInterval[0]:
+            result.append(intervals[i])
+            i += 1
+
+    # Step 2: Merge overlapping intervals
+        while i < n and intervals[i][0] <= newInterval[1]:
+            newInterval[0] = min(newInterval[0], intervals[i][0])
+            newInterval[1] = max(newInterval[1], intervals[i][1])
+            i += 1
+
+        result.append(newInterval)
+
+    # Step 3: Add remaining intervals
+        while i < n:
+            result.append(intervals[i])
+            i += 1
+
+        return result   
+
+#=====================================================================================
+
+#56. Merge Intervals
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        if not intervals:
+            return []
+
+    # Step 1: Sort intervals based on start time
+        intervals.sort(key=lambda x: x[0])
+
+        merged = [intervals[0]]
+
+        for curr in intervals[1:]:
+            last = merged[-1]
+    
+        # Step 2: If current interval overlaps with last, merge
+            if curr[0] <= last[1]:
+                last[1] = max(last[1], curr[1])
+            else:
+                merged.append(curr)
+
+        return merged
+
