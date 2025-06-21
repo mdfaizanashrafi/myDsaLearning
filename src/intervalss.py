@@ -225,4 +225,122 @@ class Solution:
 
 #===============================================================================
 
-#
+#435. Non-overlapping Intervals
+
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        if not intervals:
+            return 0
+
+    # Step 1: Sort intervals by end time
+        intervals.sort(key=lambda x: x[1])
+
+    # Step 2: Initialize
+        count = 0
+        end = float('-inf')
+
+        for start, curr_end in intervals:
+            if start >= end:
+            # No overlap, keep this interval
+                end = curr_end
+            else:
+            # Overlap found, remove this interval
+                count += 1
+
+        return count  
+
+#=================================================================================
+
+#252: Metting Rooms:
+
+from typing import List
+
+# Definition of Interval
+class Interval:
+    def __init__(self, start: int, end: int):
+        self.start = start
+        self.end = end
+
+class Solution:
+    def canAttendMeetings(self, intervals: List[Interval]) -> bool:
+        # Sort intervals based on their start times
+        intervals.sort(key=lambda x: x.start)
+
+        # Check for overlap between consecutive intervals
+        for i in range(1, len(intervals)):
+            if intervals[i].start < intervals[i - 1].end:
+                return False
+        return True
+
+
+#===============================================================================
+
+#LeetCode 253: Meeting Rooms II
+
+import heapq
+from typing import List
+
+class Interval:
+    def __init__(self, start: int, end: int):
+        self.start = start
+        self.end = end
+
+class Solution:
+    def minMeetingRooms(self, intervals: List[Interval]) -> int:
+        if not intervals:
+            return 0
+
+        # Step 1: Sort intervals based on start time
+        intervals.sort(key=lambda x: x.start)
+
+        # Step 2: Use a min-heap to keep track of end times
+        min_heap = []
+
+        for interval in intervals:
+            # Free up a room if possible
+            if min_heap and interval.start >= min_heap[0]:
+                heapq.heappop(min_heap)
+            # Allocate a new room
+            heapq.heappush(min_heap, interval.end)
+
+        # Size of heap is the number of rooms needed
+        return len(min_heap)
+    
+#======================================================================================
+
+#1851. Minimum Interval to Include Each Query
+
+from typing import List
+import heapq
+
+class Solution:
+    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
+        # Sort intervals by start time
+        intervals.sort()
+        
+        # Store queries with original indices
+        indexed_queries = sorted((q, i) for i, q in enumerate(queries))
+        
+        result = [0] * len(queries)
+        min_heap = []
+        i = 0  # Pointer to intervals
+        
+        for query, idx in indexed_queries:
+            # Add all intervals that could include this query
+            while i < len(intervals) and intervals[i][0] <= query:
+                l, r = intervals[i]
+                heapq.heappush(min_heap, (r - l + 1, r))
+                i += 1
+            
+            # Remove intervals from heap that don't include query
+            while min_heap and min_heap[0][1] < query:
+                heapq.heappop(min_heap)
+            
+            # Top of heap is the smallest valid interval
+            if min_heap:
+                result[idx] = min_heap[0][0]
+            else:
+                result[idx] = -1
+        
+        return result
+
